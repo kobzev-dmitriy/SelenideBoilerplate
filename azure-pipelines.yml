@@ -22,5 +22,5 @@ steps:
     goals: 'package'
 - task: AllureGenerate@1
   inputs:
-    resultsDir: 'allure-results'
+    resultsDir: 'test-output'
     targetDir: 'test-output'
