@@ -1,12 +1,12 @@
 import app.App;
+import app.AppConfig;
 import helpers.Driver;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
+
 
 class A_BaseTest {
 
@@ -24,15 +24,18 @@ class A_BaseTest {
 
         logger = LogManager.getLogger("");
         DOMConfigurator.configure("src/main/resources/log4j.xml");
-    }
 
-    @AfterMethod
-    public void clearCookies() {
-        Driver.clearCookies();
+
+        app.loginPage.open();
+        app.loginPage.login(AppConfig.loginUser, AppConfig.passwordUser);
+
     }
 
     @AfterClass
     public void tearDown() {
+        app.loginPage.open();
+        app.mainPage.logout();
+        Driver.clearCookies();
         Driver.close();
     }
 }

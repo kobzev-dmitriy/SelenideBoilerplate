@@ -27,14 +27,16 @@ public class Driver {
 
         Configuration.pageLoadStrategy = "eager";
         Configuration.browserSize = "1920x1080";
-        Configuration.holdBrowserOpen = false;
+        Configuration.startMaximized = true;
+        Configuration.holdBrowserOpen = true;
         Configuration.screenshots = false;
 
-        if(TestConfig.isHeadless()) {
+        Configuration.reportsFolder = "test-result/reports/screenshots";
+        /*if(TestConfig.isHeadless()) {
             Configuration.headless = true;
-        } else {
+        } else {*/
             Configuration.headless = false;
-        }
+        //}
 
         switch (TestConfig.browser)
         {
@@ -52,6 +54,7 @@ public class Driver {
 
     public static WebDriver currentDriver() {
         return WebDriverRunner.getSelenideDriver().getWebDriver();
+        //return WebDriverRunner.getWebDriver();
     }
 
     public static void open(String url) {
@@ -60,6 +63,7 @@ public class Driver {
 
     public static void refresh() {
         Selenide.refresh();
+        Driver.wait(1);
     }
 
     public static void executeJs(String script) {
@@ -111,19 +115,21 @@ public class Driver {
         }
     }
 
-    public static void takeScreenshot() {
+    public static String takeScreenshot(String name) {
 
         File scrFile = ((TakesScreenshot) currentDriver()).getScreenshotAs(OutputType.FILE);
-
+        String fileName = name + ".png";
         String path = System.getProperty("user.dir")
-                + File.separator + "test-output"
+                + File.separator + "target"
+                + File.separator + "surefire-reports"
                 + File.separator + "screenshots"
-                + File.separator + " " + "screenshot_" +  (new SimpleDateFormat("HHmmssSSS").format(new Date())) + ".png";
+                + File.separator + fileName;
         try {
             FileUtils.copyFile(scrFile, new File(path));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return fileName;
     }
 
     public static List<LogEntry> getBrowserLogs() {
